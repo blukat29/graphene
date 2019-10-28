@@ -8,6 +8,7 @@
 #include "pal_security.h"
 #include "ecall_types.h"
 #include "ocall_types.h"
+#include "graphene-sgx.h"
 
 #include <generated-offsets-build.h>
 
@@ -153,5 +154,10 @@ void dummy(void)
 
     /* Ocall Index */
     DEFINE(OCALL_EXIT, OCALL_EXIT);
+
+    /* SGX_DCAP */
+#ifdef SGX_DCAP
+    DEFINE(SGX_DCAP, SGX_DCAP);
+#endif
 }
 
