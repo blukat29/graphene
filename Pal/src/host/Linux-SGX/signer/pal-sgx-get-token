@@ -125,7 +125,7 @@ def connect_aesmd(attr):
     and others with placeholder ('\0')"""
 
 def create_dummy_token(attr):
-    token = array.array('B', '\0'*304)
+    token = array.array('B', b'\0'*304)
 
     # field format: (offset, type, field in attr)
     fields = dict()
@@ -142,14 +142,14 @@ def create_dummy_token(attr):
     fields['isvprodidle'] = (208, "<H")
     fields['isvsvnle'] = (210, "<H")
     fields['reserved4'] = (212, "24B")
-    fields['miscmask'] = (236, "<I")
+    fields['misc_mask'] = (236, "<I")
     fields['flagmask'] = (240, "<Q") # attrmask
     fields['xfrmmask'] = (248, "<Q") # attrmask
     fields['keyid'] = (256, "32B")
     fields['mac'] = (288, "16B")
 
     # fields read by create_enclave() in sgx_framework.c
-    actual_fields = ['flags', 'xfrms', 'miscmask']
+    actual_fields = ['flags', 'xfrms', 'misc_mask']
 
     for key in actual_fields:
         field = fields[key]
