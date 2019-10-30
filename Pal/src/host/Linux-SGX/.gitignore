@@ -4,6 +4,7 @@
 /pal-sgx
 /quote/aesm.pb-c.c
 /quote/aesm.pb-c.h
+/quote/generated-cacert.h
 
 *.pem
 *.pub
