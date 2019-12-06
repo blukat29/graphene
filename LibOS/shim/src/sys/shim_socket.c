@@ -1713,7 +1713,39 @@ query:
     {
         PAL_STREAM_ATTR attr;
 
-        if (!DkStreamAttributesQueryByHandle(hdl->pal_handle, &attr)) {
+        if (!hdl->pal_handle) {
+            /* Give best effort if the underlying PAL handle has not been
+               created yet. */
+            struct shim_sock_option* o = sock->pending_options;
+
+            while (o) {
+                if (o->optname == optname) {
+                    *optlen = (o->optlen > *optlen) ? *optlen : o->optlen;
+                    memcpy(optval, &o->optval, *optlen);
+                    goto out;
+                }
+                o = o->next;
+            }
+
+            if (level == SOL_SOCKET) {
+                switch (optname) {
+                    case SO_REUSEADDR:
+                        *intval = 1;
+                        break;
+                    /* Cannot determine value before opening a PAL stream */
+                    default:
+                        goto unknown;
+                }
+            }
+
+            if (level == SOL_TCP) {
+                switch (optname) {
+                    /* Cannot determine value before opening a PAL stream */
+                    default:
+                        goto unknown;
+                }
+            }
+        } else if (!DkStreamAttributesQueryByHandle(hdl->pal_handle, &attr)) {
             ret = -PAL_ERRNO;
             goto out;
         }
